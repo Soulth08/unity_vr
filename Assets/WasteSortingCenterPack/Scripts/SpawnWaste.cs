@@ -14,8 +14,8 @@ public class SpawnWaste : MonoBehaviour
 {
     public Vector3 PositionSpawn;
     public Vector3 ForceSpawn;
-    public float minForce =0f;
-    public float maxForce =10f;
+    public float minForce =1f;
+    public float maxForce =2f;
 
     public List<WasteSpawnItem> wasteItems = new List<WasteSpawnItem>();
     public float minTimeBetweenSpawn = 1f;
