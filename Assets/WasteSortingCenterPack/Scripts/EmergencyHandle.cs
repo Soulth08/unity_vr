@@ -44,6 +44,8 @@ public class EmergencyHandle : MonoBehaviour
 
     public void OnHandlePulled(SelectEnterEventArgs args)
     {
+        print("interacted");
+
         if (isPulled) return;
         isPulled = true;
 

@@ -78,8 +78,6 @@ GameObject:
   - component: {fileID: 3930147012837547545}
   - component: {fileID: 4028608103622608244}
   - component: {fileID: 2934612324899900164}
-  - component: {fileID: 6776649365251322399}
-  - component: {fileID: 1141086826256549063}
   m_Layer: 0
   m_Name: Treadmill
   m_TagString: Untagged
@@ -179,30 +177,3 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6208850902824686287, guid: 87033b02177178e4faa90dd90b2313e8, type: 3}
---- !u!114 &6776649365251322399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8584777915075445416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04e7733abec58bb40b62a531b498efc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxTreadmillSpeed: 1
-  targetSpeed: 0.791
-  treadmillMat: {fileID: 2100000, guid: 2c985441cc4a9df48b6d5e0aa564e8d5, type: 2}
---- !u!114 &1141086826256549063
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8584777915075445416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae84ded3449781641a05a744f3625dcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
