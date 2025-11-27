@@ -6,7 +6,8 @@ public class DestroyWaste : MonoBehaviour
     {
         if (other.CompareTag("Waste"))
         {
-            Destroy(other.gameObject);
+            //attendre 2 secondes avant de detruire l'objet
+            Destroy(other.gameObject, 2f);
         }
     }
 }
