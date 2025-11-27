@@ -429,6 +429,21 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
+--- !u!114 &585875860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585875855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1883d5983e81f446597f90b25a5843bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  treadmills:
+  - {fileID: 708876149}
+  restartDelay: 2
 --- !u!1 &602619960
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,6 +672,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 708876148}
+  - component: {fileID: 708876149}
   m_Layer: 0
   m_Name: Treadmills
   m_TagString: Untagged
@@ -681,6 +697,21 @@ Transform:
   - {fileID: 989604116}
   m_Father: {fileID: 2077418794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &708876149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708876147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04e7733abec58bb40b62a531b498efc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxTreadmillSpeed: 1
+  targetSpeed: 0.791
+  treadmillMat: {fileID: 2100000, guid: 2c985441cc4a9df48b6d5e0aa564e8d5, type: 2}
 --- !u!1001 &788021924
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1024,6 +1055,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4538790229165839792, guid: 9b914ca82b3583d40986aac4b7e9d746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 585875859}
+    - targetCorrespondingSourceObject: {fileID: 4538790229165839792, guid: 9b914ca82b3583d40986aac4b7e9d746, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 585875860}
   m_SourcePrefab: {fileID: 100100000, guid: 9b914ca82b3583d40986aac4b7e9d746, type: 3}
 --- !u!4 &940273067 stripped
 Transform:
@@ -1232,8 +1266,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1141086826256549063, guid: 78bd523dee023d74c851c8e4a6434f16, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 8992986378423041509, guid: 78bd523dee023d74c851c8e4a6434f16, type: 3}
