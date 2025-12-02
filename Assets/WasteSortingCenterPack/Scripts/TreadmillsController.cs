@@ -43,4 +43,9 @@ public class TreadmillsController : MonoBehaviour
     {
         isPaused = value;
     }
+    //FONCTION pour permettre � la poign�e de changer la cible
+    public void SetTargetSpeed(float speed01)
+    {
+        targetSpeed = Mathf.Clamp01(speed01);
+    }
 }
