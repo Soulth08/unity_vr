@@ -54,17 +54,6 @@ public class EmergencyHandle : MonoBehaviour
         }
     }
 
-    // Avec la souris
-    void OnMouseDown()
-    {
-        OnHandlePulled();
-    }
-    
-    void OnMouseUp()
-    {
-        OnHandleReleased();
-    }
-
     // Gestion de l'interaction 
 
     public void OnHandlePulled(SelectEnterEventArgs args = null)
