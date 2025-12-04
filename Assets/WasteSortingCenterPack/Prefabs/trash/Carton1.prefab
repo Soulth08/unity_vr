@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8379072064256097613}
   m_Layer: 0
   m_Name: Carton1
-  m_TagString: Waste
+  m_TagString: Waste Recycle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
