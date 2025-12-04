@@ -1056,9 +1056,6 @@ PrefabInstance:
       addedObject: {fileID: 1410470307}
     - targetCorrespondingSourceObject: {fileID: 4538790229165839792, guid: 9b914ca82b3583d40986aac4b7e9d746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1410470309}
-    - targetCorrespondingSourceObject: {fileID: 4538790229165839792, guid: 9b914ca82b3583d40986aac4b7e9d746, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1410470308}
   m_SourcePrefab: {fileID: 100100000, guid: 9b914ca82b3583d40986aac4b7e9d746, type: 3}
 --- !u!1 &806908260
@@ -2431,20 +2428,6 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
---- !u!114 &1410470309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1410470298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 581c17f5d411f1b4eb1d2382b4717e4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hauteurMontee: 1.5
-  vitesseMontee: 2
 --- !u!1 &1414661288
 GameObject:
   m_ObjectHideFlags: 0
@@ -3158,6 +3141,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2154971c4d9ba47429becc701601d089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  standardDestroyEffect: {fileID: 0}
+  negativeDestroyEffect: {fileID: 0}
+  DeleterParticlesDirection: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &1780422071
 GameObject:
   m_ObjectHideFlags: 0
