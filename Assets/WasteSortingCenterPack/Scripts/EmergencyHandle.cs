@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using System.Collections;
+using UnityEngine.XR.Interaction.Toolkit.Interactables; 
 
 public class EmergencyHandle : MonoBehaviour
 {
@@ -17,12 +18,18 @@ public class EmergencyHandle : MonoBehaviour
     public GameObject[] lumiereVertes; 
     public GameObject[] lumiereRouges; 
 
-    private UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable interactable;
+    private XRGrabInteractable grabInteractable;
     private bool isPulled = false; 
 
     void Awake()
     {
-        interactable = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable>();
+
+        grabInteractable = GetComponent<XRGrabInteractable>();
+
+        if (grabInteractable == null)
+        {
+            return; 
+        }
 
         if (treadmills == null || treadmills.Length == 0)
         {
@@ -30,7 +37,7 @@ public class EmergencyHandle : MonoBehaviour
         }
         if (lumiereVertes.Length != lumiereRouges.Length)
         {
-            Debug.LogError("Erreur Configuration Lumières: Le nombre de lumières Vertes et Rouges doit être identique!");
+            Debug.LogError("Erreur Configuration Lumières: le nombre de lumières Vertes et Rouges doit être identique.");
         }
 
         MettreAJourLumiere(true); 
@@ -38,25 +45,25 @@ public class EmergencyHandle : MonoBehaviour
 
     void OnEnable()
     {
-        if (interactable != null)
+        // Abonne les fonctions aux événements de sélection (saisie)
+        if (grabInteractable != null)
         {
-            interactable.selectEntered.AddListener(args => OnHandlePulled());
-            interactable.selectExited.AddListener(args => OnHandleReleased());
+            grabInteractable.selectEntered.AddListener(OnHandlePulled);
+            grabInteractable.selectExited.AddListener(OnHandleReleased);
         }
     }
 
     void OnDisable()
     {
-        if (interactable != null)
+        if (grabInteractable != null)
         {
-            interactable.selectEntered.RemoveAllListeners();
-            interactable.selectExited.RemoveAllListeners();
+            grabInteractable.selectEntered.RemoveListener(OnHandlePulled);
+            grabInteractable.selectExited.RemoveListener(OnHandleReleased);
         }
     }
 
     // Gestion de l'interaction 
-
-    public void OnHandlePulled(SelectEnterEventArgs args = null)
+    public void OnHandlePulled(SelectEnterEventArgs args)
     {
         if (isPulled) return;
         isPulled = true;
@@ -67,18 +74,16 @@ public class EmergencyHandle : MonoBehaviour
         {
             treadmill.SetPaused(true);
         }
-    
+
         StartCoroutine(ClignotementLumiereRouge()); 
         
         print("Poignée d'urgence tirée. Tapis à l'arrêt. Lumière ROUGE clignotante.");
     }
-
-    public void OnHandleReleased(SelectExitEventArgs args = null)
+    public void OnHandleReleased(SelectExitEventArgs args)
     {
         if (!isPulled) return;
 
         StopCoroutine(ClignotementLumiereRouge());
-        StartCoroutine(ClignotementLumiereRouge()); 
         
         StartCoroutine(RestartAfterDelay());
     }
@@ -86,16 +91,18 @@ public class EmergencyHandle : MonoBehaviour
     // Clignotement 
     IEnumerator ClignotementLumiereRouge()
     {
-        MettreAJourLumiere(false);
+        MettreAJourLumiere(false); 
 
         while (isPulled) 
         {
+            // Allume les lumières rouges
             for (int i = 0; i < lumiereRouges.Length; i++)
             {
                 if (lumiereRouges[i] != null) lumiereRouges[i].SetActive(true);
             }
             yield return new WaitForSeconds(clignotementFrequence); 
 
+            // Éteint les lumières rouges
             for (int i = 0; i < lumiereRouges.Length; i++)
             {
                 if (lumiereRouges[i] != null) lumiereRouges[i].SetActive(false);
@@ -110,7 +117,6 @@ public class EmergencyHandle : MonoBehaviour
     }
     
     // Logique d'Arrêt / Redémarrage Différé 
-
     IEnumerator RestartAfterDelay()
     {
         yield return new WaitForSeconds(restartDelay);
@@ -123,12 +129,11 @@ public class EmergencyHandle : MonoBehaviour
         }
 
         isPulled = false; 
-        MettreAJourLumiere(true); 
+        MettreAJourLumiere(true);
         
-        print("Lumière Verte active.");
+        print("Redémarrage effectué. Lumière Verte active.");
     }
-    
-    // Affichage des Lumières 
+
     private void MettreAJourLumiere(bool estEnMarche)
     {
         if (lumiereVertes.Length != lumiereRouges.Length)
