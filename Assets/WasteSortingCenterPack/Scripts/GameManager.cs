@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Paramètres de Jeu")]
     public int maxHealth = 3;
-    public int scorePerWaste = 10;
+    public int scorePerWaste = 1;
 
     [Header("Interface (UI)")]
     public TMP_Text scoreText;   // Assigne ton texte de Score ici

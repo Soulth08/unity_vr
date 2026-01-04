@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7865106804904971153}
   - component: {fileID: 3816859442534410788}
   - component: {fileID: 7198120720090435974}
-  - component: {fileID: 3384591634633074969}
   m_Layer: 0
   m_Name: Deleter
   m_TagString: Untagged
@@ -109,21 +108,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3384591634633074969
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7702956142004431155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2154971c4d9ba47429becc701601d089, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  standardDestroyEffect: {fileID: 0}
-  negativeDestroyEffect: {fileID: 0}
-  DeleterParticlesDirection: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &8483845351808887538
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,7 +120,6 @@ GameObject:
   - component: {fileID: 3984829206689031276}
   - component: {fileID: 7611684735802914306}
   - component: {fileID: 288166518073851836}
-  - component: {fileID: 1819160476232923731}
   m_Layer: 0
   m_Name: V2_Bin
   m_TagString: Untagged
@@ -235,18 +218,3 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5844435623575427901, guid: 87033b02177178e4faa90dd90b2313e8, type: 3}
---- !u!114 &1819160476232923731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8483845351808887538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2154971c4d9ba47429becc701601d089, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  standardDestroyEffect: {fileID: 0}
-  negativeDestroyEffect: {fileID: 0}
-  DeleterParticlesDirection: {x: 0, y: 0, z: 0, w: 0}
