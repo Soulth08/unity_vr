@@ -1,13 +1,13 @@
 using UnityEngine;
-using TMPro; // Nécessaire pour gérer le texte UI
-using UnityEngine.SceneManagement; // Pour relancer la scène si Game Over
+using TMPro; // Necessaire pour grer le texte UI
+using UnityEngine.SceneManagement; // Pour relancer la scne si Game Over
 
 public class GameManager : MonoBehaviour
 {
-    // Le Singleton : permet d'accéder à "GameManager.Instance" depuis n'importe quel script
+    // Le Singleton : permet d'accder  "GameManager.Instance" depuis n'importe quel script
     public static GameManager Instance;
 
-    [Header("Paramètres de Jeu")]
+    [Header("Paramtres de Jeu")]
     public int maxHealth = 3;
     public int scorePerWaste = 1;
 
@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text healthText;  // Assigne ton texte de Vie ici
     public GameObject gameOverPanel; // Optionnel : un panneau "Perdu"
 
-    // Variables privées
+    // Variables prives
     private int currentScore = 0;
     private int currentHealth;
     private bool isGameOver = false;
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
             gameOverPanel.SetActive(false);
     }
 
-    // Fonction appelée pour gagner des points
+    // Fonction appele pour gagner des points
     public void AddScore()
     {
         if (isGameOver) return;
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         UpdateUI();
     }
 
-    // Fonction appelée pour perdre de la vie
+    // Fonction appele pour perdre de la vie
     public void TakeDamage(int damageAmount)
     {
         if (isGameOver) return;
@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
 
-        // Ici tu pourras ajouter un bouton pour relancer la scène
+        // Ici tu pourras ajouter un bouton pour relancer la scne
         // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
