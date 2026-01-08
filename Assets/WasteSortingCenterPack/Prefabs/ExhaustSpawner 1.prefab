@@ -260,5 +260,7 @@ MonoBehaviour:
     probability: 11.8
   - prefab: {fileID: 2746375857149925937, guid: cbc04c0a44ac34e44a3d3d1ec0981b1e, type: 3}
     probability: 12.4
+  - prefab: {fileID: 542294682733072115, guid: ccbb903ef76999f4481ba015e4e55fa6, type: 3}
+    probability: 12.4
   minTimeBetweenSpawn: 1
   maxTimeBetweenSpawn: 3
