@@ -41,6 +41,14 @@ public class DestroyWasteBin : MonoBehaviour
 
             Destroy(objToDestroy);
         }
+        else
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddScore(-1);
+            }
+            Destroy(objToDestroy);
+        }
 
     }
 
