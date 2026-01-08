@@ -26,7 +26,7 @@ public class Rotate_Handle : MonoBehaviour
         // Si angle = -45 -> ratio 0 (vitesse min)
         // Si angle = 0   -> ratio 0.5 (vitesse moyenne)
         // Si angle = 45  -> ratio 1 (vitesse max)
-        float ratio = Mathf.InverseLerp(angleBack, angleForward, currentAngle);
+        float ratio = Mathf.InverseLerp(angleBack - 10f, angleForward, currentAngle);
 
         // 3. Envoyer au contrôleur
         treadmillsController.SetTargetSpeed(ratio);
