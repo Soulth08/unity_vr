@@ -24,9 +24,9 @@ public class DestroyWaste : MonoBehaviour // ce code est utilisé par le deleter 
     {
         yield return new WaitForSeconds(2f); // attendre un peu avant, sinon l'objet disparait dès qu'il rentre en contact avec le deleter et c'est moche
 
-        if (objToDestroy == null) yield break;
+        if (objToDestroy == null || objToDestroy.CompareTag("Player")) yield break; //éviter que le joueur puisse être lui aussi détruit
 
-        
+
         // effet standard de particules, pour les déchets
         if (standardDestroyEffect != null)
         {
@@ -72,8 +72,7 @@ public class DestroyWaste : MonoBehaviour // ce code est utilisé par le deleter 
             }
         }
 
-
-        Destroy(objToDestroy); // détruire l'objet
+            Destroy(objToDestroy); // détruire l'objet
     }
 
     // Petite fonction utilitaire pour nettoyer les particules

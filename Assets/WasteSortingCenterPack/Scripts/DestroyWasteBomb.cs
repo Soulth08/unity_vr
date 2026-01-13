@@ -17,7 +17,7 @@ public class DestroyBombBin : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        if (objToDestroy == null) yield break;
+        if (objToDestroy == null || objToDestroy.CompareTag("Player")) yield break; //éviter que le joueur puisse être lui aussi détruit
 
         if (objToDestroy.CompareTag("Bomb"))
         {

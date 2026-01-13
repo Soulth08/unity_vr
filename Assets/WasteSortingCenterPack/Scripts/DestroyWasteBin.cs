@@ -21,7 +21,7 @@ public class DestroyWasteBin : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        if (objToDestroy == null) yield break;
+        if (objToDestroy == null || objToDestroy.CompareTag("Player")) yield break; //éviter que le joueur puisse être lui aussi détruit
 
         // effet standard de particules pour les déchets
         if (standardDestroyEffect != null)
