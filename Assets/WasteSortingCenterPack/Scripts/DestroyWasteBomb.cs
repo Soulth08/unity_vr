@@ -4,10 +4,7 @@ using System.Collections;
 public class DestroyBombBin : MonoBehaviour
 {
     [Header("Effets de Particules")]
-    [Tooltip("Effet positif quand une bombe est neutralisée (ex: Étincelles vertes / Confettis)")]
-    public GameObject neutralizeEffect;
-
-    [Tooltip("Effet d'erreur quand on jette autre chose (ex: Fumée noire / Croix rouge)")]
+    [Tooltip("Effet quand on jette autre chose que la bombe")]
     public GameObject errorEffect;
 
     private void OnTriggerEnter(Collider other)
@@ -18,40 +15,30 @@ public class DestroyBombBin : MonoBehaviour
 
     private IEnumerator DestroySequence(GameObject objToDestroy)
     {
-        // 1. Délai pour laisser l'objet tomber au fond
         yield return new WaitForSeconds(2f);
 
         if (objToDestroy == null) yield break;
 
-        // --- CAS 1 : C'EST UNE BOMBE (VICTOIRE) ---
         if (objToDestroy.CompareTag("Bomb"))
         {
             if (GameManager.Instance != null)
             {
-                // A. Gagner 10 Points (On passe 10 en argument)
+                // Comme la poubelle des bombes est éloignée de la zone de tri, on a décidé de grandement récompenser le joueur
+                // Gagner des points au score
                 GameManager.Instance.AddScore(10);
 
-                // B. Gagner 1 Vie (Nécessite la fonction AddLife ajoutée précédemment)
+                // Gagner 1 Vie
                 GameManager.Instance.AddLife(1);
             }
 
-            // C. Effet visuel de réussite (Neutralisation)
-            if (neutralizeEffect != null)
-            {
-                GameObject fx = Instantiate(neutralizeEffect, objToDestroy.transform.position, Quaternion.identity);
-                DestroyParticleAfterPlay(fx);
-            }
-
-            // D. Destruction (Neutralise la bombe car son script Countdown est détruit avec)
             Destroy(objToDestroy);
         }
 
-        // --- CAS 2 : C'EST UN DÉCHET OU AUTRE (ERREUR) ---
         else
         {
             if (GameManager.Instance != null)
             {
-                // Perdre 1 point (Score négatif)
+                // Perdre 1 point
                 GameManager.Instance.AddScore(-1);
             }
 

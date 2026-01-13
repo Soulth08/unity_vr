@@ -23,23 +23,22 @@ public class DestroyWasteBin : MonoBehaviour
 
         if (objToDestroy == null) yield break;
 
-        // --- 1. EFFET STANDARD (SUR L'OBJET) ---
+        // effet standard de particules pour les déchets
         if (standardDestroyEffect != null)
         {
-            // On garde Quaternion.identity ici pour que l'explosion soit droite par rapport au monde
-            // (Mais on peut changer si tu veux qu'elle suive l'objet)
             GameObject fx = Instantiate(standardDestroyEffect, objToDestroy.transform.position, Quaternion.identity);
 
             // Nettoyage automatique
             DestroyParticleAfterPlay(fx);
         }
 
+        // si un objet recyclable arrive dans le deleter, on ajoute un point au score
         if (objToDestroy.CompareTag("Waste Recycle"))
         {
 
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.AddScore();
+                GameManager.Instance.AddScore(); // on utilise les fonctions du gameManager
 
             }
 
@@ -49,13 +48,11 @@ public class DestroyWasteBin : MonoBehaviour
         // Bombe
         else if (objToDestroy.CompareTag("Bomb"))
         {
-            Console.WriteLine("Bombe object destroy");
             if (bombDestroyEffect != null)
             {
                 if (GameManager.Instance != null)
                 {
-                    GameManager.Instance.TakeDamage(1, true);
-                    Console.WriteLine("Bombe gamemanager"); // Ajoutez cette ligne pour afficher "Bombe" dans la consol
+                    GameManager.Instance.TakeDamage(1, true); // si une bombe arrive dans une poubelle, on perd directement !
                 }
 
                 GameObject errorFx = Instantiate(bombDestroyEffect, transform.position, transform.rotation * DeleterParticlesDirection);
@@ -72,7 +69,7 @@ public class DestroyWasteBin : MonoBehaviour
         {
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.AddScore(-1);
+                GameManager.Instance.AddScore(-1); // si un objet non recyclable arrive dans la poubelle, on perd un point au score
             }
             Destroy(objToDestroy);
         }

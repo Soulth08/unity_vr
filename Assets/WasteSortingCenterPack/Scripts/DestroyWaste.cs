@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class DestroyWaste : MonoBehaviour
+public class DestroyWaste : MonoBehaviour // ce code est utilisé par le deleter principal après les treadmills
 {
     [Header("Effets de Particules")]
     [Tooltip("Effet standard (sur l'objet détruit).")]
@@ -13,7 +13,7 @@ public class DestroyWaste : MonoBehaviour
     [Tooltip("Effet d'explosion de la bombe")]
     public GameObject bombDestroyEffect;
 
-    public Quaternion DeleterParticlesDirection;
+    public Quaternion DeleterParticlesDirection; // permet de changer la direction des particules pour correspondre à celle du deleter
 
     private void OnTriggerEnter(Collider other)
     {
@@ -22,22 +22,21 @@ public class DestroyWaste : MonoBehaviour
 
     private IEnumerator DestroySequence(GameObject objToDestroy)
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(2f); // attendre un peu avant, sinon l'objet disparait dès qu'il rentre en contact avec le deleter et c'est moche
 
         if (objToDestroy == null) yield break;
 
-        // --- 1. EFFET STANDARD (SUR L'OBJET) ---
+        
+        // effet standard de particules, pour les déchets
         if (standardDestroyEffect != null)
         {
-            // On garde Quaternion.identity ici pour que l'explosion soit droite par rapport au monde
-            // (Mais on peut changer si tu veux qu'elle suive l'objet)
             GameObject fx = Instantiate(standardDestroyEffect, objToDestroy.transform.position, Quaternion.identity);
 
             // Nettoyage automatique
             DestroyParticleAfterPlay(fx);
         }
 
-        // --- 2. EFFET NEGATIF (SUR LE DELETER) ---
+        // effet lorsqu'un déchet recyclable arrive dans le deleter
         if (objToDestroy.CompareTag("Waste Recycle"))
         {
             if (negativeDestroyEffect != null)
@@ -47,8 +46,7 @@ public class DestroyWaste : MonoBehaviour
                     GameManager.Instance.TakeDamage(1);
                 }
 
-                // CORRECTION DIRECTION : On utilise 'transform.rotation' au lieu de 'Quaternion.identity'
-                // L'effet suivra désormais la rotation de votre objet Deleter
+                // L'effet suivra la rotation indiquée de l'objet Deleter
                 GameObject errorFx = Instantiate(negativeDestroyEffect, transform.position, transform.rotation * DeleterParticlesDirection);
 
                 // Nettoyage automatique
@@ -64,7 +62,7 @@ public class DestroyWaste : MonoBehaviour
             {
                 if (GameManager.Instance != null)
                 {
-                    GameManager.Instance.TakeDamage(1, true);
+                    GameManager.Instance.TakeDamage(1, true); // on indique true pour dire que c'est une bombe, et arrêter directement la partie en cours
                 }
 
                 GameObject errorFx = Instantiate(bombDestroyEffect, transform.position, transform.rotation * DeleterParticlesDirection);
@@ -75,7 +73,7 @@ public class DestroyWaste : MonoBehaviour
         }
 
 
-        Destroy(objToDestroy);
+        Destroy(objToDestroy); // détruire l'objet
     }
 
     // Petite fonction utilitaire pour nettoyer les particules

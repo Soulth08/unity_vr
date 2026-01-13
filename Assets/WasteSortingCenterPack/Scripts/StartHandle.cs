@@ -2,15 +2,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
-// Décommente si tu utilises XR Toolkit 3.0+
-// using UnityEngine.XR.Interaction.Toolkit.Interactables; 
 
 [RequireComponent(typeof(XRGrabInteractable))]
 public class StartHandle : MonoBehaviour
 {
     [Header("Configuration")]
     [SerializeField] private float seuilActivation = 0.12f;
-    [SerializeField] private float delaiEntreDeuxTirages = 1.0f; // Temps avant de pouvoir retirer
+    [SerializeField] private float delaiEntreDeuxTirages = 1.0f; // Temps avant de pouvoir tirer à nouveau la poignée
 
     [Header("Lumière de la Poignée")]
     public Light lumierePoignee;
@@ -19,7 +17,7 @@ public class StartHandle : MonoBehaviour
 
     // Variables internes
     private Vector3 startPosition;
-    private bool estVerrouillee = false; // Remplace "aEteActive" pour gérer le cooldown
+    private bool estVerrouillee = false;
 
     private void Awake()
     {
@@ -43,20 +41,32 @@ public class StartHandle : MonoBehaviour
     private IEnumerator ActionSequence()
     {
         estVerrouillee = true; // On verrouille immédiatement
-        SetLumiere(couleurActive); // Feedback visuel
+        SetLumiere(couleurActive); // on change la couleur de la lumière de la poignée
 
         Debug.Log("POIGNÉE TIRÉE !");
 
         // On prévient le GameManager qu'une action a eu lieu
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.OnHandleAction();
+            GameManager.Instance.StartHandle();
         }
 
-        // On attend un peu avant de permettre de tirer à nouveau (Cooldown)
+        //on fait clignoter la lumière de la poignée
+        for (int i = 0; i < 3; i++)
+        {
+            if (lumierePoignee != null)
+            {
+                lumierePoignee.enabled = false;
+                yield return new WaitForSeconds(0.3f);
+                lumierePoignee.enabled = true;
+                yield return new WaitForSeconds(0.3f);
+            }
+        }
+
+        // on attend un peu avant de permettre de tirer à nouveau (Cooldown)
         yield return new WaitForSeconds(delaiEntreDeuxTirages);
 
-        // On remet la lumière au rouge (repos) et on déverrouille
+        // On remet la lumière de base et on déverrouille
         SetLumiere(couleurRepos);
         estVerrouillee = false;
     }
@@ -68,12 +78,5 @@ public class StartHandle : MonoBehaviour
             lumierePoignee.enabled = true;
             lumierePoignee.color = c;
         }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Vector3 center = Application.isPlaying ? startPosition : transform.localPosition;
-        Gizmos.DrawWireSphere(center, seuilActivation);
     }
 }

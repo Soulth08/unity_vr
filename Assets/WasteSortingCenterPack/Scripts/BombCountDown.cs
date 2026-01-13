@@ -14,21 +14,24 @@ public class BombCountdown : MonoBehaviour
     public Color couleurFlash = Color.white;
     public GameObject bombDestroyEffect;
 
-    [Header("Feedback Audio - Explosion")]
+    [Header("Explosion")]
     public AudioClip explosionSound;
     [Range(0f, 1f)] public float volumeExplosion = 1f;
-    [Tooltip("0 = 2D, 1 = 3D")]
+
+    // comme spatialBlend, permet de choisir si le son est plus réparti entre les deux canaux uniformément ou indépendemment selon la direction
+    // c'est mieux de mettre des valeurs 3D, car cel permet d'identifier rapidement où se situe la bombe
+    [Tooltip("0 = 2D, 1 = 3D")] 
     [Range(0f, 1f)] public float spatialBlend = 1f;
     public float minPitch = 0.8f;
     public float maxPitch = 1.2f;
 
-    [Header("Feedback Audio - Timer (Tic-Tac)")]
-    [Tooltip("Le son du compte à rebours (Mèche, Bip-bip...). La fin du fichier sera synchronisée avec l'explosion.")]
-    public AudioClip timerSound; // <--- NOUVEAU
-    [Range(0f, 1f)] public float volumeTimer = 1f; // <--- NOUVEAU
+    [Header("Compte à rebours")]
+    [Tooltip("Le son du compte à rebours. La fin du fichier sera synchronisée avec l'explosion.")]
+    public AudioClip timerSound;
+    [Range(0f, 1f)] public float volumeTimer = 1f;
 
-    [Header("Feedback UI")]
-    public TMP_Text timerText;
+    [Header("UI")]
+    public TMP_Text timerText; // pas utilisé ici, mais permet d'afficher le temps restant au dessus de la bombe
 
     // Variables internes
     private float timerActuel;
@@ -47,28 +50,28 @@ public class BombCountdown : MonoBehaviour
         emissionColorId = Shader.PropertyToID("_EmissionColor");
         if (bombRenderer != null) bombRenderer.material.EnableKeyword("_EMISSION");
 
-        // --- SETUP AUDIO TIMER ---
+        // SETUP AUDIO Compte à rebours
         if (timerSound != null)
         {
             // On ajoute un AudioSource directement sur la bombe pour qu'il la suive
             timerAudioSource = gameObject.AddComponent<AudioSource>();
             timerAudioSource.clip = timerSound;
             timerAudioSource.volume = volumeTimer;
-            timerAudioSource.spatialBlend = 1f; // Toujours en 3D pour entendre d'où vient la menace
-            timerAudioSource.loop = false; // Important : pas de boucle, on veut la fin précise
+            timerAudioSource.spatialBlend = spatialBlend;
+            timerAudioSource.loop = false; // Important : pas de boucle
             timerAudioSource.playOnAwake = false;
 
-            // LOGIQUE DE SYNCHRONISATION
-            // Cas 1 : Le son est plus long que le timer (ex: Son 30s, Timer 20s)
-            // On doit jouer immédiatement, mais en sautant le début pour ne jouer que la fin.
+            
+            // Si le son est plus long que le timer (ex: Son 30s, Timer 20s)
+            // On doit jouer immédiatement, mais en sautant le début pour ne jouer que la fin
             if (timerSound.length >= tempsAvantExplosion)
             {
                 timerAudioSource.time = timerSound.length - tempsAvantExplosion;
                 timerAudioSource.Play();
                 timerSoundStarted = true;
             }
-            // Cas 2 : Le son est plus court (ex: Son 5s, Timer 20s)
-            // On ne fait rien ici, on attendra dans l'Update.
+            // Si le son est plus court (ex: Son 5s, Timer 20s)
+            // On ne fait rien ici, on attendra dans l'Update
         }
     }
 
@@ -78,7 +81,8 @@ public class BombCountdown : MonoBehaviour
 
         timerActuel -= Time.deltaTime;
 
-        // --- GESTION AUDIO TIMER (Cas du son court) ---
+        // gestion du son dans le cas où le fichier est plus court
+        // il faut le synchroniser pour qu'il se termine exactement au moment de l'explosion
         if (timerAudioSource != null && !timerSoundStarted)
         {
             // Si le temps restant est inférieur ou égal à la durée du son, on lance !
@@ -88,7 +92,7 @@ public class BombCountdown : MonoBehaviour
                 timerSoundStarted = true;
             }
         }
-        // ----------------------------------------------
+
 
         if (timerText != null)
         {
@@ -98,23 +102,23 @@ public class BombCountdown : MonoBehaviour
 
         if (bombRenderer != null) ApplyBlinkingEffect();
 
-        if (timerActuel <= 0) Explode();
+        if (timerActuel <= 0) Explode(); // Explosioooooooooooon
     }
 
     private void ApplyBlinkingEffect()
     {
-        float progression = 1 - (timerActuel / tempsAvantExplosion);
-        float vitesseActuelle = Mathf.Lerp(vitesseClignotementStart, vitesseClignotementEnd, progression);
-        float lerp = (Mathf.Sin(Time.time * vitesseActuelle) + 1f) / 2f;
+        float progression = 1 - (timerActuel / tempsAvantExplosion); // valeur entre 0 (début) et 1 (fin) indiquant l'avancée du compte à rebours
+        float vitesseActuelle = Mathf.Lerp(vitesseClignotementStart, vitesseClignotementEnd, progression); // fais une conversion de la progession en vitesse de clignotement
+        float lerp = (Mathf.Sin(Time.time * vitesseActuelle) + 1f) / 2f; // on utilise sin pour avoir un blinking plus doux que le ON/OFF utilisé pour le texte de l'ordinateur
 
-        Color finalEmission = Color.Lerp(Color.black, couleurFlash, lerp);
+        Color finalEmission = Color.Lerp(Color.black, couleurFlash, lerp); // le noir est la couleur invisible pour l'émission
         bombRenderer.material.SetColor(emissionColorId, finalEmission);
     }
 
     private void Explode()
     {
         aExplose = true;
-        Debug.Log("BOUM !");
+        Debug.Log("Explosiooooooooon !");
 
         if (GameManager.Instance != null) GameManager.Instance.TakeDamage(1, true);
 
@@ -126,8 +130,8 @@ public class BombCountdown : MonoBehaviour
             PlayCustomSound();
         }
 
-        // En détruisant l'objet, l'AudioSource du timer attaché dessus sera coupé net.
-        // C'est exactement ce qu'on veut (le tic-tac s'arrête quand ça explose).
+        // En détruisant l'objet, l'AudioSource du timer attaché dessus sera coupé net
+        // le tic-tac s'arrête quand ça explose
         Destroy(gameObject);
     }
 

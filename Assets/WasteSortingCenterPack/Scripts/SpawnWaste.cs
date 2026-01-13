@@ -11,33 +11,29 @@ public class WasteSpawnItem
 
 public class SpawnWaste : MonoBehaviour
 {
-    [Header("Spawn Settings")]
+    [Header("Paramètres de Spawn")]
     public Vector3 PositionSpawn;
     public Vector3 ForceSpawn;
     public float minForce = 1f;
     public float maxForce = 2f;
-
-    public List<WasteSpawnItem> wasteItems = new List<WasteSpawnItem>();
-
-    [Header("Temps de Spawn (Départ)")]
     public float minTimeBetweenSpawn = 1f;
     public float maxTimeBetweenSpawn = 3f;
 
+    public List<WasteSpawnItem> wasteItems = new List<WasteSpawnItem>();
+
     [Header("Difficulté Progressive")]
-    [Tooltip("Temps en secondes avant que la difficulté commence à augmenter (ex: 30s)")]
+    [Tooltip("Temps en secondes avant que la difficulté commence à augmenter")]
     public float tempsAvantDifficulté = 30f;
 
-    [Tooltip("Combien de secondes on retire au délai de spawn par seconde de jeu (ex: 0.05 rend le jeu plus rapide doucement)")]
+    [Tooltip("Combien de secondes on retire au délai de spawn par seconde de jeu")]
     public float accelerationParSeconde = 0.05f;
 
-    [Tooltip("La limite absolue : on ne pourra jamais spawner plus vite que ça (pour éviter les bugs)")]
+    [Tooltip("limite absolue : on ne pourra jamais spawner plus vite que ça")]
     public float limiteMinimaleAbsolue = 0.5f;
 
     // Variables internes
     private float nextSpawnTime;
-    private float timeStarted; // Pour savoir quand le spawner a été activé
-
-    // Pour se souvenir des valeurs originales
+    private float timeStarted; // quand le spawner a été activé, permet de suivre l'évolution du jeu
     private float baseMinTime;
     private float baseMaxTime;
 
@@ -51,11 +47,7 @@ public class SpawnWaste : MonoBehaviour
         baseMinTime = minTimeBetweenSpawn;
         baseMaxTime = maxTimeBetweenSpawn;
 
-        // --- CORRECTION ICI ---
-        // 1. On essaie de récupérer le composant AudioSource sur l'objet
         audioSource = GetComponent<AudioSource>();
-
-        // 2. S'il n'existe pas, on le crée automatiquement pour éviter les erreurs
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
@@ -64,7 +56,7 @@ public class SpawnWaste : MonoBehaviour
 
     void OnEnable()
     {
-        // On enregistre l'heure de début dès que le script est activé par le GameManager
+        // On enregistre le moment de début dès que le script est activé par le GameManager
         timeStarted = Time.time;
         SetNextSpawnTime();
     }
@@ -73,34 +65,34 @@ public class SpawnWaste : MonoBehaviour
     {
         if (Time.time >= nextSpawnTime)
         {
-            SpawnRandomWaste();
-            SetNextSpawnTime();
+            SpawnRandomWaste(); // Spawn un objet
+            SetNextSpawnTime(); // Met à jour la difficulté
         }
     }
 
     void SetNextSpawnTime()
     {
-        // 1. Calcul du temps écoulé depuis l'activation du spawner
+        //  temps écoulé depuis l'activation du spawner
         float tempsEcoule = Time.time - timeStarted;
 
         float currentMin = baseMinTime;
         float currentMax = baseMaxTime;
 
-        // 2. Si on a dépassé les 30 secondes (tempsAvantDifficulté)
+        // ne pas augmenter la difficulté avant un peu de temps
         if (tempsEcoule > tempsAvantDifficulté)
         {
-            // On calcule combien de temps on a passé DANS la phase de difficulté
+            // On calcule combien de temps on a passé dans la phase de difficulté
             float tempsDeDifficulté = tempsEcoule - tempsAvantDifficulté;
 
-            // Calcul de la réduction (Linéaire)
+            // difficulté linéaire (on aurait aussi pu mettre logaritmique)
             float reduction = tempsDeDifficulté * accelerationParSeconde;
 
-            // On applique la réduction sans descendre sous la limite absolue
+            // ne peut pas descendre sous la limite absolue
             currentMin = Mathf.Max(limiteMinimaleAbsolue, baseMinTime - reduction);
             currentMax = Mathf.Max(limiteMinimaleAbsolue, baseMaxTime - reduction);
         }
 
-        // 3. Définir le prochain spawn avec les nouvelles valeurs
+        // prochain spawn avec les nouvelles valeurs
         // Mathf.Max(currentMin, currentMax) assure que le max n'est jamais inférieur au min
         float randomDelay = Random.Range(currentMin, Mathf.Max(currentMin, currentMax));
 
@@ -109,8 +101,9 @@ public class SpawnWaste : MonoBehaviour
 
     void SpawnRandomWaste()
     {
-        if (wasteItems.Count == 0) return;
+        if (wasteItems.Count == 0) return; // si aucun objet dans la liste, alors on ne peut rien faire
 
+        // calcul de la somme totale, utilisé pour avoir la probabilité de chaque objet
         float totalProbability = 0f;
         foreach (var item in wasteItems)
         {
@@ -118,6 +111,7 @@ public class SpawnWaste : MonoBehaviour
         }
 
         if (totalProbability <= 0) return;
+
 
         float randomValue = Random.Range(0f, totalProbability);
         float cumulativeProbability = 0f;

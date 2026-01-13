@@ -24,8 +24,8 @@ public class EmergencyHandleTimed : MonoBehaviour
     public Light[] lumieresPlafond;
 
     [Header("Couleurs")]
-    public Color couleurPret = Color.green;   // Vert
-    public Color couleurUrgence = Color.red;  // Rouge
+    public Color couleurPret = Color.green;   // Vert si disponible
+    public Color couleurUrgence = Color.red;  // Rouge si en cours de rechargement
 
     [Header("Physique & Détection")]
     [Tooltip("Distance physique en mètres pour déclencher l'activation")]
@@ -33,17 +33,17 @@ public class EmergencyHandleTimed : MonoBehaviour
 
     // Variables internes
     private Vector3 startPosition;
-    private bool estDisponible = true; // Est-ce qu'on peut tirer ?
-    private Color couleurPlafondBase; // Pour se souvenir de la couleur originale du plafond
+    private bool estDisponible = true;
+    private Color couleurPlafondBase; // Pour se souvenir de la couleur originale des luimieres au plafond
 
     private void Awake()
     {
         startPosition = transform.localPosition;
 
-        // On sauvegarde la couleur normale du plafond pour plus tard
+        // On sauvegarde la couleur normale du plafond pour plus tard, comme ça on pourra la remettre à la fin de la durée de STOP
         if (lumieresPlafond.Length > 0 && lumieresPlafond[0] != null)
         {
-            couleurPlafondBase = lumieresPlafond[0].color;
+            couleurPlafondBase = lumieresPlafond[0].color; // On prend la première lumière au plafond, en partant du principe qu'elles ont toutes la même couleur
         }
 
         // On met tout au vert au démarrage
@@ -67,14 +67,14 @@ public class EmergencyHandleTimed : MonoBehaviour
 
     private IEnumerator SequenceUrgence()
     {
-        // --- PHASE 1 : ARRÊT D'URGENCE (0s à 5s) ---
+        // Emergency STOP
         estDisponible = false; // On verrouille le système
         Debug.Log("URGENCE ACTIVÉE : Tapis STOP");
 
-        // 1. Arrêt des tapis
+        // Arrêt des treadmills, mais pas du spawner !
         SetTreadmillsPaused(true);
 
-        // 2. Lumières : Tout passe au ROUGE FIXE
+        // Lumières, tout passe au ROUGE
         if (lumierePoignee != null)
         {
             lumierePoignee.enabled = true;
@@ -82,21 +82,20 @@ public class EmergencyHandleTimed : MonoBehaviour
         }
         ChangerCouleurPlafond(couleurUrgence);
 
-        // 3. On attend les 5 secondes d'arrêt
+        // 5 secondes d'arrêt
         yield return new WaitForSeconds(dureeArretUrgence);
 
 
-        // --- PHASE 2 : REDÉMARRAGE & COOLDOWN (5s à 20s) ---
+        // Cooldown
         Debug.Log("FIN URGENCE : Redémarrage Tapis + Début Cooldown");
 
-        // 1. Les tapis redémarrent
+        // réactive les treadmills
         SetTreadmillsPaused(false);
 
-        // 2. Le Plafond redevient NORMAL (couleur de base)
+        // les lumières au plafond reviennent à leur couleur de base
         ChangerCouleurPlafond(couleurPlafondBase);
 
-        // 3. La Poignée CLIGNOTE ROUGE pendant le temps restant
-        // Calcul du temps restant : 20 - 5 = 15 secondes
+        // la lumière d el apoignée cligote en rouge pendant le cooldown
         float tempsRestant = dureeCycleTotal - dureeArretUrgence;
         float finCooldown = Time.time + tempsRestant;
 
@@ -105,7 +104,7 @@ public class EmergencyHandleTimed : MonoBehaviour
             // On allume/éteint la lumière rouge de la poignée
             if (lumierePoignee != null)
             {
-                lumierePoignee.enabled = !lumierePoignee.enabled;
+                lumierePoignee.enabled = !lumierePoignee.enabled; // Clignotement, même principe que le texte sur l'ordinateur
                 // S'assure qu'elle reste rouge quand elle est allumée
                 if (lumierePoignee.enabled) lumierePoignee.color = couleurUrgence;
             }
@@ -113,7 +112,6 @@ public class EmergencyHandleTimed : MonoBehaviour
             yield return new WaitForSeconds(0.25f); // Vitesse du clignotement
         }
 
-        // --- PHASE 3 : RETOUR À LA NORMALE (Après 20s) ---
         Debug.Log("SYSTÈME PRÊT");
 
         // Tout redevient vert et disponible
@@ -121,7 +119,6 @@ public class EmergencyHandleTimed : MonoBehaviour
         estDisponible = true;
     }
 
-    // --- Fonctions d'aide ---
 
     private void SetEtatVisuel_Pret()
     {
@@ -138,7 +135,7 @@ public class EmergencyHandleTimed : MonoBehaviour
 
     private void ChangerCouleurPlafond(Color c)
     {
-        foreach (var l in lumieresPlafond)
+        foreach (var l in lumieresPlafond) // On parcourt toutes les lumieres et on change leur couleur individuellement
         {
             if (l != null) l.color = c;
         }
@@ -146,17 +143,9 @@ public class EmergencyHandleTimed : MonoBehaviour
 
     private void SetTreadmillsPaused(bool isPaused)
     {
-        foreach (var t in treadmills)
+        foreach (var t in treadmills) // On parcourt tous les tapis et on les arrête ou les redémarre
         {
             if (t != null) t.SetPaused(isPaused);
         }
-    }
-
-    // Dessine une sphère jaune dans l'éditeur pour voir la distance d'activation
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Vector3 center = Application.isPlaying ? startPosition : transform.position;
-        Gizmos.DrawWireSphere(center, seuilActivation);
     }
 }
