@@ -10,6 +10,9 @@ public class DestroyWaste : MonoBehaviour
     [Tooltip("Effet négatif (sur le Deleter).")]
     public GameObject negativeDestroyEffect;
 
+    [Tooltip("Effet d'explosion de la bombe")]
+    public GameObject bombDestroyEffect;
+
     public Quaternion DeleterParticlesDirection;
 
     private void OnTriggerEnter(Collider other)
@@ -52,6 +55,25 @@ public class DestroyWaste : MonoBehaviour
                 DestroyParticleAfterPlay(errorFx);
             }
         }
+
+        // Bombe
+        else if (objToDestroy.CompareTag("Bomb"))
+        {
+
+            if (bombDestroyEffect != null)
+            {
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.TakeDamage(1, true);
+                }
+
+                GameObject errorFx = Instantiate(bombDestroyEffect, transform.position, transform.rotation * DeleterParticlesDirection);
+
+                // Nettoyage automatique
+                DestroyParticleAfterPlay(errorFx);
+            }
+        }
+
 
         Destroy(objToDestroy);
     }

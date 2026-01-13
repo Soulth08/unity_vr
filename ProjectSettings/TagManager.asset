@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Waste
   - Waste Recycle
+  - Bomb
   layers:
   - Default
   - TransparentFX

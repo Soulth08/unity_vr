@@ -1,106 +1,75 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+// Décommente si tu utilises XR Toolkit 3.0+
+// using UnityEngine.XR.Interaction.Toolkit.Interactables; 
 
 [RequireComponent(typeof(XRGrabInteractable))]
 public class StartHandle : MonoBehaviour
 {
     [Header("Configuration")]
-    [Tooltip("Distance physique en mètres pour déclencher l'activation")]
     [SerializeField] private float seuilActivation = 0.12f;
+    [SerializeField] private float delaiEntreDeuxTirages = 1.0f; // Temps avant de pouvoir retirer
 
     [Header("Lumière de la Poignée")]
-    [Tooltip("La lumière située sur la poignée")]
     public Light lumierePoignee;
-
-    [Header("Couleurs")]
-    public Color couleurInactif = Color.red;   // Rouge = pas encore tiré
-    public Color couleurActif = Color.green;   // Vert = partie lancée
+    public Color couleurRepos = Color.red;
+    public Color couleurActive = Color.green;
 
     // Variables internes
     private Vector3 startPosition;
-    private bool aEteActive = false; // Pour s'assurer qu'on ne déclenche qu'une seule fois
+    private bool estVerrouillee = false; // Remplace "aEteActive" pour gérer le cooldown
 
     private void Awake()
     {
         startPosition = transform.localPosition;
-
-        // Au début, la poignée est rouge (inactive)
-        SetLumiereInactive();
+        SetLumiere(couleurRepos);
     }
 
     private void Update()
     {
-        // Si déjà activée, on ne fait plus rien
-        if (aEteActive) return;
+        // Si la poignée est en cooldown (verrouillée), on ne fait rien
+        if (estVerrouillee) return;
 
-        // On calcule de combien la poignée a bougé
         float currentDistance = Vector3.Distance(transform.localPosition, startPosition);
 
-        // Si on dépasse le seuil, on lance la partie
         if (currentDistance >= seuilActivation)
         {
-            ActiverPoignee();
+            StartCoroutine(ActionSequence());
         }
     }
 
-    private void ActiverPoignee()
+    private IEnumerator ActionSequence()
     {
-        aEteActive = true;
-        Debug.Log("START HANDLE : Partie lancée !");
+        estVerrouillee = true; // On verrouille immédiatement
+        SetLumiere(couleurActive); // Feedback visuel
 
-        // La lumière passe au vert
-        SetLumiereActive();
+        Debug.Log("POIGNÉE TIRÉE !");
 
-        // --- APPEL DES ACTIONS DE DÉMARRAGE ---
-
-        // 1. Notifier le GameManager
+        // On prévient le GameManager qu'une action a eu lieu
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.StartGame();
-        }
-        else
-        {
-            Debug.LogWarning("GameManager.Instance est null !");
+            GameManager.Instance.OnHandleAction();
         }
 
-        // --- TU PEUX AJOUTER D'AUTRES ACTIONS ICI ---
+        // On attend un peu avant de permettre de tirer à nouveau (Cooldown)
+        yield return new WaitForSeconds(delaiEntreDeuxTirages);
 
-        // Exemple : Démarrer les tapis
-        // TreadmillsController[] tapis = FindObjectsOfType<TreadmillsController>();
-        // foreach (var t in tapis)
-        // {
-        //     if (t != null) t.SetPaused(false);
-        // }
-
-        // Exemple : Activer un spawner de déchets
-        // WasteSpawner spawner = FindObjectOfType<WasteSpawner>();
-        // if (spawner != null) spawner.StartSpawning();
-
-        // Exemple : Démarrer un timer
-        // TimerController timer = FindObjectOfType<TimerController>();
-        // if (timer != null) timer.StartTimer();
+        // On remet la lumière au rouge (repos) et on déverrouille
+        SetLumiere(couleurRepos);
+        estVerrouillee = false;
     }
 
-    private void SetLumiereInactive()
+    private void SetLumiere(Color c)
     {
         if (lumierePoignee != null)
         {
             lumierePoignee.enabled = true;
-            lumierePoignee.color = couleurInactif;
+            lumierePoignee.color = c;
         }
     }
 
-    private void SetLumiereActive()
-    {
-        if (lumierePoignee != null)
-        {
-            lumierePoignee.enabled = true;
-            lumierePoignee.color = couleurActif;
-        }
-    }
-
-    // Dessine une sphère jaune dans l'éditeur pour voir la distance d'activation
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

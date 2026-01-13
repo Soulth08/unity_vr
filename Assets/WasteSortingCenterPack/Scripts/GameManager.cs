@@ -1,49 +1,61 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    // Le Singleton : permet d'accéder à "GameManager.Instance" depuis n'importe quel script
     public static GameManager Instance;
+
+    // --- NOUVEAU : Cette variable survit au rechargement de la scène ---
+    private static bool autoStartNextTime = false;
 
     [Header("Paramètres de Jeu")]
     public int maxHealth = 3;
     public int scorePerWaste = 1;
 
-    [Header("Interface (UI)")]
+    [Header("Interface Petit Écran (Machine)")]
+    public TMP_Text machineScreenText;
+
+    [Header("Messages Écran")]
+    [TextArea] public string txtMenu = "TIRER POUR\nCOMMENCER";
+    public string txtPret = "PRÊT...";
+    public string txtJeu = "REINITIALISER";
+    public string txtGameOver = "REJOUER";
+
+    [Header("Interface Monde")]
+    public TMP_Text countdownText;
     public TMP_Text scoreText;
+    public TMP_Text highScoreText;
     public TMP_Text healthText;
     public GameObject gameOverPanel;
-    public GameObject startPanel; // Panneau "Tirez pour commencer"
 
-    [Header("Contrôle des Systèmes")]
-    [Tooltip("Glisse tes scripts de tapis ici")]
+    [Header("Audio")]
+    public AudioClip gameOverSound;
+    public AudioClip goSound;
+    public AudioClip scoreSound;
+    public AudioClip damageSound;
+    public AudioClip bombSound;
+    private AudioSource audioSource;
+
+    [Header("Systèmes")]
     public TreadmillsController[] tousLesTapis;
-
-    [Tooltip("Glisse tes scripts de spawn de déchets ici")]
     public MonoBehaviour[] tousLesLanceurs;
 
-    // Variables d'état
+    // État
     private int currentScore = 0;
+    private int highScore = 0;
     private int currentHealth;
-    private bool isGameOver = false;
+    public bool isGameOver = false;
     private bool isGameStarted = false;
 
-    // Propriété publique en lecture seule pour vérifier si la partie a commencé
-    public bool IsGameStarted => isGameStarted;
+    private const string PREF_HIGHSCORE = "BestScoreKey";
+    private Coroutine blinkingCoroutine;
 
     private void Awake()
     {
-        // Initialisation du Singleton
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     private void Start()
@@ -52,120 +64,208 @@ public class GameManager : MonoBehaviour
         isGameStarted = false;
         isGameOver = false;
 
-        // --- ARRÊT INITIAL : Tout est désactivé avant que la poignée soit tirée ---
+        // Setup Audio
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+
+        highScore = PlayerPrefs.GetInt(PREF_HIGHSCORE, 0);
+
         ActiverSystemes(false);
 
+        if (countdownText != null) countdownText.gameObject.SetActive(false);
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+        if (machineScreenText != null) machineScreenText.gameObject.SetActive(true);
+
         UpdateUI();
 
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
-
-        if (startPanel != null)
-            startPanel.SetActive(true);
+        // --- MODIFICATION ICI ---
+        // On vérifie si on vient d'un "Rejouer"
+        if (autoStartNextTime)
+        {
+            // C'est un redémarrage automatique
+            autoStartNextTime = false; // On remet à zéro pour la prochaine fois
+            StartCoroutine(SequenceDemarrage()); // On lance direct le décompte !
+        }
+        else
+        {
+            // C'est un lancement normal du jeu (depuis le bureau du casque)
+            SetMachineText(txtMenu, true);
+        }
     }
 
-    /// <summary>
-    /// Fonction appelée par la StartHandle pour démarrer la partie
-    /// </summary>
-    public void StartGame()
+    public void OnHandleAction()
     {
-        // Évite de démarrer plusieurs fois ou si la partie est terminée
-        if (isGameStarted || isGameOver)
+        if (!isGameStarted && !isGameOver)
         {
-            Debug.LogWarning("La partie a déjà commencé ou est terminée !");
-            return;
+            StartCoroutine(SequenceDemarrage());
+        }
+        else
+        {
+            RestartGame();
+        }
+    }
+
+    private IEnumerator SequenceDemarrage()
+    {
+        SetMachineText(txtPret, false);
+
+        if (countdownText != null)
+        {
+            countdownText.gameObject.SetActive(true);
+
+            countdownText.text = "3";
+            yield return new WaitForSeconds(1f);
+            countdownText.text = "2";
+            yield return new WaitForSeconds(1f);
+            countdownText.text = "1";
+            yield return new WaitForSeconds(1f);
+
+            countdownText.text = "GO !";
+            if (goSound != null && audioSource != null) audioSource.PlayOneShot(goSound);
+
+            yield return new WaitForSeconds(0.5f);
+            countdownText.gameObject.SetActive(false);
+        }
+        else
+        {
+            yield return new WaitForSeconds(1f);
         }
 
+        LancerGameplay();
+    }
+
+    private void LancerGameplay()
+    {
         isGameStarted = true;
+        currentScore = 0;
+        UpdateUI();
 
-        // --- ACTIVATION DES SYSTÈMES ---
         ActiverSystemes(true);
-
-        // Cache le panneau de démarrage
-        if (startPanel != null)
-            startPanel.SetActive(false);
-
-        Debug.Log("🚀 PARTIE DÉMARRÉE : Tapis en marche et spawn lancé !");
+        SetMachineText(txtJeu, false);
+        Debug.Log("🚀 JEU LANCÉ");
     }
 
-    /// <summary>
-    /// Active ou désactive tous les systèmes du jeu (tapis + spawners)
-    /// </summary>
-    private void ActiverSystemes(bool etat)
+    public void RestartGame()
     {
-        // Gestion des tapis : si etat = true → on démarre (SetPaused = false)
-        foreach (var tapis in tousLesTapis)
-        {
-            if (tapis != null)
-                tapis.SetPaused(!etat);
-        }
+        // --- MODIFICATION ICI ---
+        // On signale qu'on veut démarrer tout de suite au prochain chargement
+        autoStartNextTime = true;
 
-        // Gestion des spawners : on active/désactive les scripts
-        foreach (var lanceur in tousLesLanceurs)
-        {
-            if (lanceur != null)
-                lanceur.enabled = etat;
-        }
-    }
-
-    /// <summary>
-    /// Fonction appelée pour gagner des points. par défaut à scoreperwaste, mais peut prendre un autre nombre
-    /// </summary>
-    public void AddScore(int customScorePerWaste = 0)
-    {
-        if (customScorePerWaste != 0) scorePerWaste = customScorePerWaste;
-        if (!isGameStarted || isGameOver) return;
-
-        currentScore += scorePerWaste;
-        UpdateUI();
-    }
-
-    /// <summary>
-    /// Fonction appelée pour perdre de la vie
-    /// </summary>
-    public void TakeDamage(int damageAmount)
-    {
-        if (!isGameStarted || isGameOver) return;
-
-        currentHealth -= damageAmount;
-
-        if (currentHealth <= 0)
-        {
-            currentHealth = 0;
-            TriggerGameOver();
-        }
-
-        UpdateUI();
-    }
-
-    private void UpdateUI()
-    {
-        if (scoreText != null)
-            scoreText.text = "Score: " + currentScore;
-
-        if (healthText != null)
-            healthText.text = "Vies: " + currentHealth;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void TriggerGameOver()
     {
         isGameOver = true;
         isGameStarted = false;
-
-        // On arrête tous les systèmes en cas de défaite
         ActiverSystemes(false);
 
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(true);
+        if (gameOverSound != null && audioSource != null) audioSource.PlayOneShot(gameOverSound);
 
+        if (currentScore > highScore)
+        {
+            highScore = currentScore;
+            PlayerPrefs.SetInt(PREF_HIGHSCORE, highScore);
+            PlayerPrefs.Save();
+            Debug.Log("Nouveau record enregistré !");
+        }
+
+        UpdateUI();
+
+        if (gameOverPanel != null) gameOverPanel.SetActive(true);
+
+        SetMachineText(txtGameOver, true);
         Debug.Log("💀 GAME OVER");
     }
 
-    /// <summary>
-    /// Fonction pour relancer la partie (à appeler depuis un bouton UI)
-    /// </summary>
-    public void RestartGame()
+    // ... LE RESTE DU CODE (UI, ActiverSystemes, Scores, TakeDamage) EST IDENTIQUE ...
+
+    private void SetMachineText(string message, bool clignote)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (machineScreenText == null) return;
+        if (blinkingCoroutine != null) StopCoroutine(blinkingCoroutine);
+
+        machineScreenText.text = message;
+        machineScreenText.enabled = true;
+
+        if (clignote) blinkingCoroutine = StartCoroutine(RoutineClignotement());
+    }
+
+    private IEnumerator RoutineClignotement()
+    {
+        if (machineScreenText != null) machineScreenText.enabled = true;
+        while (true)
+        {
+            yield return new WaitForSeconds(0.6f);
+            if (machineScreenText != null) machineScreenText.enabled = !machineScreenText.enabled;
+            else yield break;
+        }
+    }
+
+    private void ActiverSystemes(bool etat)
+    {
+        foreach (var t in tousLesTapis) if (t != null) t.SetPaused(!etat);
+        foreach (var l in tousLesLanceurs) if (l != null) l.enabled = etat;
+    }
+
+    public void AddScore(int amount = 1)
+    {
+        if (!isGameStarted || isGameOver) return;
+        currentScore += amount;
+        UpdateUI();
+
+        if (scoreSound != null && audioSource != null) audioSource.PlayOneShot(scoreSound);
+    }
+
+    public void TakeDamage(int damage = 1, bool isBomb = false)
+    {
+        if (!isGameStarted || isGameOver) return;
+
+        if (isBomb) currentHealth = 0;
+        else currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            TriggerGameOver();
+        }
+        UpdateUI();
+
+        if (damageSound != null && audioSource != null && !isBomb)
+        {
+            audioSource.PlayOneShot(damageSound);
+        }
+        else if (bombSound != null && audioSource != null && isBomb)
+        {
+            audioSource.PlayOneShot(bombSound);
+        }
+    }
+
+    /// <summary>
+    /// Ajoute une vie au joueur (sans dépasser le max)
+    /// </summary>
+    public void AddLife(int amount = 1)
+    {
+        if (!isGameStarted || isGameOver) return;
+
+        currentHealth += amount;
+
+        // On s'assure de ne pas dépasser le maximum de vie défini
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        UpdateUI();
+
+        // Optionnel : Jouer un son de "Soin" ou "PowerUp" ici
+        // if (audioSource != null && healSound != null) audioSource.PlayOneShot(healSound);
+    }
+
+    private void UpdateUI()
+    {
+        if (scoreText != null) scoreText.text = "Score: " + currentScore;
+        if (healthText != null) healthText.text = "Vies: " + currentHealth;
+        if (highScoreText != null) highScoreText.text = "Record: " + highScore;
     }
 }

@@ -8,6 +8,10 @@ public class DestroyWasteBin : MonoBehaviour
     [Tooltip("Effet standard (sur l'objet détruit).")]
     public GameObject standardDestroyEffect;
 
+    [Tooltip("Effet d'explosion de la bombe")]
+    public GameObject bombDestroyEffect;
+    public Quaternion DeleterParticlesDirection;
+
     private void OnTriggerEnter(Collider other)
     {
         StartCoroutine(DestroySequence(other.gameObject));
@@ -41,6 +45,29 @@ public class DestroyWasteBin : MonoBehaviour
 
             Destroy(objToDestroy);
         }
+
+        // Bombe
+        else if (objToDestroy.CompareTag("Bomb"))
+        {
+            Console.WriteLine("Bombe object destroy");
+            if (bombDestroyEffect != null)
+            {
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.TakeDamage(1, true);
+                    Console.WriteLine("Bombe gamemanager"); // Ajoutez cette ligne pour afficher "Bombe" dans la consol
+                }
+
+                GameObject errorFx = Instantiate(bombDestroyEffect, transform.position, transform.rotation * DeleterParticlesDirection);
+
+                // Nettoyage automatique
+                DestroyParticleAfterPlay(errorFx);
+            }
+
+            Destroy(objToDestroy);
+        }
+
+
         else
         {
             if (GameManager.Instance != null)

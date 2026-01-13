@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+	<asset>
+		<contributor>
+			<author>Assimp</author>
+			<authoring_tool>Assimp Exporter</authoring_tool>
+		</contributor>
+		<created>2023-03-12T00:10:17</created>
+		<modified>2023-03-12T00:10:17</modified>
+		<unit name="meter" meter="1.000000" />
+		<up_axis>Y_UP</up_axis>
+	</asset>
+	<library_effects>
+		<effect id="T_speaker_1001-fx" name="T_speaker_1001">
+			<profile_COMMON>
+				<technique sid="standard">
+					<phong>
+						<diffuse>
+							<color sid="diffuse">0.800000   0.800000   0.800000   1.000000</color>
+						</diffuse>
+					</phong>
+				</technique>
+			</profile_COMMON>
+		</effect>
+	</library_effects>
+	<library_materials>
+		<material id="T_speaker_1001" name="T_speaker_1001">
+			<instance_effect url="#T_speaker_1001-fx"/>
+		</material>
+	</library_materials>
+	<library_geometries>
+		<geometry id="meshId0" name="meshId0_name" >
+			<mesh>
+				<source id="meshId0-positions" name="meshId0-positions">
+					<float_array id="meshId0-positions-array" count="72"> 
+						0.121000 -0.196690 0.196690 0.121000 0.196690 0.196690 -0.121000 0.196690 0.196690 -0.121000 -0.196690 0.196690 -0.121000 -0.196690 -0.196690 0.121000 -0.196690 -0.196690 0.121000 -0.196690 0.196690 -0.121000 -0.196690 0.196690 -0.121000 0.196690 -0.196690 -0.121000 -0.196690 -0.196690 -0.121000 -0.196690 0.196690 -0.121000 0.196690 0.196690 -0.121000 -0.196690 -0.196690 -0.121000 0.196690 -0.196690 0.121000 0.196690 -0.196690 0.121000 -0.196690 -0.196690 0.121000 -0.196690 -0.196690 0.121000 0.196690 -0.196690 0.121000 0.196690 0.196690 0.121000 -0.196690 0.196690 0.121000 0.196690 -0.196690 -0.121000 0.196690 -0.196690 -0.121000 0.196690 0.196690 0.121000 0.196690 0.196690 
+					</float_array>
+					<technique_common>
+						<accessor count="24" offset="0" source="#meshId0-positions-array" stride="3">
+							<param name="X" type="float" />
+							<param name="Y" type="float" />
+							<param name="Z" type="float" />
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="meshId0-normals" name="meshId0-normals">
+					<float_array id="meshId0-normals-array" count="72"> 
+						0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 0.000000 -0.000000 -1.000000 0.000000 -0.000000 -1.000000 0.000000 -0.000000 -1.000000 0.000000 -0.000000 -1.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 -0.000000 0.000000 1.000000 -0.000000 0.000000 1.000000 -0.000000 0.000000 1.000000 -0.000000 
+					</float_array>
+					<technique_common>
+						<accessor count="24" offset="0" source="#meshId0-normals-array" stride="3">
+							<param name="X" type="float" />
+							<param name="Y" type="float" />
+							<param name="Z" type="float" />
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="meshId0-tangents" name="meshId0-tangents">
+					<float_array id="meshId0-tangents-array" count="72"> 
+						-1.000000 -0.000000 0.000000 -1.000000 -0.000000 0.000000 -1.000000 -0.000000 0.000000 -1.000000 -0.000000 0.000000 -1.000000 0.000000 -0.000000 -1.000000 0.000000 -0.000000 -1.000000 0.000000 -0.000000 -1.000000 -0.000000 0.000000 0.000000 -1.000000 -0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 -0.000000 0.000000 -1.000000 -0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 -1.000000 -0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 -0.000000 0.000000 -1.000000 0.000000 0.000000 
+					</float_array>
+					<technique_common>
+						<accessor count="24" offset="0" source="#meshId0-tangents-array" stride="3">
+							<param name="X" type="float" />
+							<param name="Y" type="float" />
+							<param name="Z" type="float" />
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="meshId0-bitangents" name="meshId0-bitangents">
+					<float_array id="meshId0-bitangents-array" count="72"> 
+						0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 0.000000 -1.000000 0.000000 -0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 -0.000000 -1.000000 0.000000 -0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 -0.000000 1.000000 0.000000 -0.000000 1.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 0.000000 0.000000 -0.000000 -1.000000 0.000000 -0.000000 -1.000000 0.000000 -0.000000 -1.000000 0.000000 -0.000000 -1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 0.000000 0.000000 1.000000 
+					</float_array>
+					<technique_common>
+						<accessor count="24" offset="0" source="#meshId0-bitangents-array" stride="3">
+							<param name="X" type="float" />
+							<param name="Y" type="float" />
+							<param name="Z" type="float" />
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="meshId0-tex0" name="meshId0-tex0">
+					<float_array id="meshId0-tex0-array" count="48"> 
+						0.719805 0.464278 0.719805 0.041158 0.980101 0.041158 0.980101 0.464278 0.706404 0.901752 0.446109 0.901752 0.446109 0.478633 0.706404 0.478633 0.286214 0.041158 0.709333 0.041158 0.709333 0.464278 0.286214 0.464278 0.716876 0.901752 0.716876 0.478633 0.977171 0.478633 0.977171 0.901752 0.435636 0.901752 0.012517 0.901752 0.012517 0.478633 0.435636 0.478633 0.015446 0.041158 0.275741 0.041158 0.275741 0.464278 0.015446 0.464278 
+					</float_array>
+					<technique_common>
+						<accessor count="24" offset="0" source="#meshId0-tex0-array" stride="2">
+							<param name="S" type="float" />
+							<param name="T" type="float" />
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="meshId0-vertices">
+					<input semantic="POSITION" source="#meshId0-positions" />
+				</vertices>
+				<polylist count="12" material="defaultMaterial">
+					<input offset="0" semantic="VERTEX" source="#meshId0-vertices" />
+					<input offset="0" semantic="NORMAL" source="#meshId0-normals" />
+					<input offset="0" semantic="TANGENT" source="#meshId0-tangents" />
+					<input offset="0" semantic="BINORMAL" source="#meshId0-bitangents" />
+					<input offset="0" semantic="TEXCOORD" source="#meshId0-tex0" set="0" />
+					<vcount>
+						3 3 3 3 3 3 3 3 3 3 3 3 
+					</vcount>
+					<p>
+						0 1 2 2 3 0 4 5 6 6 7 4 8 9 10 10 11 8 12 13 14 14 15 12 16 17 18 18 19 16 20 21 22 22 23 20 
+					</p>
+				</polylist>
+			</mesh>
+		</geometry>
+	</library_geometries>
+	<library_visual_scenes>
+		<visual_scene id="RootNode" name="RootNode">
+			<node id="Cube" name="Cube">
+				<matrix>100.000000 0.000000 0.000000 0.000000 0.000000 -0.000016 100.000000 0.000000 0.000000 -100.000000 -0.000016 0.000000 0.000000 0.000000 0.000000 1.000000</matrix>
+				<instance_geometry url="#meshId0">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="defaultMaterial" target="#T_speaker_1001" />
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+		</visual_scene>
+	</library_visual_scenes>
+	<scene>
+		<instance_visual_scene url="#RootNode" />
+	</scene>
+</COLLADA>
