@@ -5080,7 +5080,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3665577928296510948, guid: 0e27bb942c14eef489be89c2f076aaef, type: 3}
       propertyPath: "tempsAvantDifficult\xE9"
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3665577928296510948, guid: 0e27bb942c14eef489be89c2f076aaef, type: 3}
       propertyPath: wasteItems.Array.size
@@ -5088,7 +5088,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3665577928296510948, guid: 0e27bb942c14eef489be89c2f076aaef, type: 3}
       propertyPath: accelerationParSeconde
-      value: 0.02
+      value: 0.025
       objectReference: {fileID: 0}
     - target: {fileID: 3665577928296510948, guid: 0e27bb942c14eef489be89c2f076aaef, type: 3}
       propertyPath: wasteItems.Array.data[13].prefab
