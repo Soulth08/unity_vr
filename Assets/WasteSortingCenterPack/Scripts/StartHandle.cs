@@ -45,12 +45,6 @@ public class StartHandle : MonoBehaviour
 
         Debug.Log("POIGNÉE TIRÉE !");
 
-        // On prévient le GameManager qu'une action a eu lieu
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.StartHandle();
-        }
-
         //on fait clignoter la lumière de la poignée
         for (int i = 0; i < 3; i++)
         {
@@ -61,6 +55,12 @@ public class StartHandle : MonoBehaviour
                 lumierePoignee.enabled = true;
                 yield return new WaitForSeconds(0.3f);
             }
+        }
+
+        // On prévient le GameManager qu'une action a eu lieu
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.StartHandle();
         }
 
         // on attend un peu avant de permettre de tirer à nouveau (Cooldown)

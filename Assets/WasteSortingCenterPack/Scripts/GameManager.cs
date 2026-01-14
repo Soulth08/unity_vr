@@ -237,6 +237,16 @@ public class GameManager : MonoBehaviour
         if (scoreSound != null && audioSource != null) audioSource.PlayOneShot(scoreSound);
     }
 
+    //Ajoute un score, peut avoir des valeurs négatives si on est vraiment trop nul
+    public void RemoveScore(int amount = 1)
+    {
+        if (!isGameStarted || isGameOver) return; // On ne peut pas retirer de score si le jeu n'a pas commencé
+        currentScore -= amount;
+        UpdateUI();
+
+        if (scoreSound != null && audioSource != null) audioSource.PlayOneShot(damageSound);
+    }
+
 
     // Gère les vies du joueur
     public void TakeDamage(int damage = 1, bool isBomb = false)

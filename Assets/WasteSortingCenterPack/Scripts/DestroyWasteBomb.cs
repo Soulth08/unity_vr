@@ -39,7 +39,7 @@ public class DestroyBombBin : MonoBehaviour
             if (GameManager.Instance != null)
             {
                 // Perdre 1 point
-                GameManager.Instance.AddScore(-1);
+                GameManager.Instance.RemoveScore(1);
             }
 
             // Effet visuel d'erreur

@@ -69,7 +69,7 @@ public class DestroyWasteBin : MonoBehaviour
         {
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.AddScore(-1); // si un objet non recyclable arrive dans la poubelle, on perd un point au score
+                GameManager.Instance.RemoveScore(1); // si un objet non recyclable arrive dans la poubelle, on perd un point au score
             }
             Destroy(objToDestroy);
         }
