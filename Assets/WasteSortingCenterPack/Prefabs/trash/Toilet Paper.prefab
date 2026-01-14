@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 5221735547334945790}
   - component: {fileID: 5343852296744760889}
   - component: {fileID: 2703120514220016796}
-  - component: {fileID: -9212940492054553217}
   - component: {fileID: -8145418115608239969}
   - component: {fileID: 3281473023975507808}
+  - component: {fileID: 4605816728041714992}
+  - component: {fileID: 8628206596687121238}
   m_Layer: 0
   m_Name: Toilet Paper
   m_TagString: Waste
@@ -89,28 +90,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &-9212940492054553217
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542294682733072115}
-  m_Material: {fileID: 13400000, guid: 32a70395efadebb44b95f5a97f19b823, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -1650477108518188073, guid: d177dedeec32aa9408507aad325ce173, type: 3}
 --- !u!54 &-8145418115608239969
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -135,9 +114,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &3281473023975507808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,17 +197,17 @@ MonoBehaviour:
   m_SnapToColliderVolume: 1
   m_ReinitializeDynamicAttachEverySingleGrab: 1
   m_AttachEaseInTime: 0.15
-  m_MovementType: 2
+  m_MovementType: 0
   m_VelocityDamping: 1
   m_VelocityScale: 1
   m_AngularVelocityDamping: 1
   m_AngularVelocityScale: 1
   m_TrackPosition: 1
-  m_SmoothPosition: 0
+  m_SmoothPosition: 1
   m_SmoothPositionAmount: 8
   m_TightenPosition: 0.1
   m_TrackRotation: 1
-  m_SmoothRotation: 0
+  m_SmoothRotation: 1
   m_SmoothRotationAmount: 8
   m_TightenRotation: 0.1
   m_TrackScale: 1
@@ -260,3 +239,41 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   m_FarAttachMode: 0
+--- !u!136 &4605816728041714992
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 542294682733072115}
+  m_Material: {fileID: 13400000, guid: 32a70395efadebb44b95f5a97f19b823, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.13136467
+  m_Height: 0.359629
+  m_Direction: 2
+  m_Center: {x: 0.01, y: -0.01, z: 0.12847804}
+--- !u!114 &8628206596687121238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 542294682733072115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6328bec7ef0dfcd478e740f025a4b820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeBeforeDestroy: 30
+  removeScoreAmount: 1
+  standardDestroyEffect: {fileID: 0}
