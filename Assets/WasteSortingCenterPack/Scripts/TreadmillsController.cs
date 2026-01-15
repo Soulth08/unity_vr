@@ -13,8 +13,6 @@ public class TreadmillsController : MonoBehaviour
 
     float currentSpeed, refSpeed;
     const float SPEED_SMOOTH = 0.2f;
-
-    // Nouveau : accumulateur d'offset UV
     float uvOffset = 0f;
 
     void Start()
