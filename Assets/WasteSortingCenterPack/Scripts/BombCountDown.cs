@@ -3,7 +3,7 @@ using TMPro;
 
 public class BombCountdown : MonoBehaviour
 {
-    [Header("Paramètres Temps")]
+    [Header("Paramï¿½tres Temps")]
     public float tempsAvantExplosion = 20f;
     public float vitesseClignotementStart = 0.1f;
     public float vitesseClignotementEnd = 2f;
@@ -18,20 +18,20 @@ public class BombCountdown : MonoBehaviour
     public AudioClip explosionSound;
     [Range(0f, 1f)] public float volumeExplosion = 1f;
 
-    // comme spatialBlend, permet de choisir si le son est plus réparti entre les deux canaux uniformément ou indépendemment selon la direction
-    // c'est mieux de mettre des valeurs 3D, car cel permet d'identifier rapidement où se situe la bombe
+    // comme spatialBlend, permet de choisir si le son est plus rï¿½parti entre les deux canaux uniformï¿½ment ou indï¿½pendemment selon la direction
+    // c'est mieux de mettre des valeurs 3D, car cela permet d'identifier rapidement oï¿½ se situe la bombe
     [Tooltip("0 = 2D, 1 = 3D")] 
     [Range(0f, 1f)] public float spatialBlend = 1f;
     public float minPitch = 0.8f;
     public float maxPitch = 1.2f;
 
-    [Header("Compte à rebours")]
-    [Tooltip("Le son du compte à rebours. La fin du fichier sera synchronisée avec l'explosion.")]
+    [Header("Compte ï¿½ rebours")]
+    [Tooltip("Le son du compte ï¿½ rebours. La fin du fichier sera synchronisï¿½e avec l'explosion.")]
     public AudioClip timerSound;
     [Range(0f, 1f)] public float volumeTimer = 1f;
 
     [Header("UI")]
-    public TMP_Text timerText; // pas utilisé ici, mais permet d'afficher le temps restant au dessus de la bombe
+    public TMP_Text timerText; // pas utilisï¿½ ici, mais permet d'afficher le temps restant au dessus de la bombe
 
     // Variables internes
     private float timerActuel;
@@ -50,7 +50,7 @@ public class BombCountdown : MonoBehaviour
         emissionColorId = Shader.PropertyToID("_EmissionColor");
         if (bombRenderer != null) bombRenderer.material.EnableKeyword("_EMISSION");
 
-        // SETUP AUDIO Compte à rebours
+        // SETUP AUDIO Compte ï¿½ rebours
         if (timerSound != null)
         {
             // On ajoute un AudioSource directement sur la bombe pour qu'il la suive
@@ -63,7 +63,7 @@ public class BombCountdown : MonoBehaviour
 
             
             // Si le son est plus long que le timer (ex: Son 30s, Timer 20s)
-            // On doit jouer immédiatement, mais en sautant le début pour ne jouer que la fin
+            // On doit jouer immï¿½diatement, mais en sautant le dï¿½but pour ne jouer que la fin
             if (timerSound.length >= tempsAvantExplosion)
             {
                 timerAudioSource.time = timerSound.length - tempsAvantExplosion;
@@ -81,11 +81,11 @@ public class BombCountdown : MonoBehaviour
 
         timerActuel -= Time.deltaTime;
 
-        // gestion du son dans le cas où le fichier est plus court
+        // gestion du son dans le cas oï¿½ le fichier est plus court
         // il faut le synchroniser pour qu'il se termine exactement au moment de l'explosion
         if (timerAudioSource != null && !timerSoundStarted)
         {
-            // Si le temps restant est inférieur ou égal à la durée du son, on lance !
+            // Si le temps restant est infï¿½rieur ou ï¿½gal ï¿½ la durï¿½e du son, on lance !
             if (timerActuel <= timerSound.length)
             {
                 timerAudioSource.Play();
@@ -107,11 +107,11 @@ public class BombCountdown : MonoBehaviour
 
     private void ApplyBlinkingEffect()
     {
-        float progression = 1 - (timerActuel / tempsAvantExplosion); // valeur entre 0 (début) et 1 (fin) indiquant l'avancée du compte à rebours
-        float vitesseActuelle = Mathf.Lerp(vitesseClignotementStart, vitesseClignotementEnd, progression); // fais une conversion de la progession en vitesse de clignotement
-        float lerp = (Mathf.Sin(Time.time * vitesseActuelle) + 1f) / 2f; // on utilise sin pour avoir un blinking plus doux que le ON/OFF utilisé pour le texte de l'ordinateur
+        float progression = 1 - (timerActuel / tempsAvantExplosion); // valeur entre 0 (dï¿½but) et 1 (fin) indiquant l'avancï¿½e du compte ï¿½ rebours
+        float vitesseActuelle = Mathf.Lerp(vitesseClignotementStart, vitesseClignotementEnd, progression); // fait une conversion de la progession en vitesse de clignotement
+        float lerp = (Mathf.Sin(Time.time * vitesseActuelle) + 1f) / 2f; // on utilise sin pour avoir un blinking plus doux que le ON/OFF utilisï¿½ pour le texte de l'ordinateur
 
-        Color finalEmission = Color.Lerp(Color.black, couleurFlash, lerp); // le noir est la couleur invisible pour l'émission
+        Color finalEmission = Color.Lerp(Color.black, couleurFlash, lerp); // le noir est la couleur invisible pour l'ï¿½mission
         bombRenderer.material.SetColor(emissionColorId, finalEmission);
     }
 
@@ -130,8 +130,8 @@ public class BombCountdown : MonoBehaviour
             PlayCustomSound();
         }
 
-        // En détruisant l'objet, l'AudioSource du timer attaché dessus sera coupé net
-        // le tic-tac s'arrête quand ça explose
+        // En dï¿½truisant l'objet, l'AudioSource du timer attachï¿½ dessus sera coupï¿½ net
+        // le tic-tac s'arrï¿½te quand ï¿½a explose
         Destroy(gameObject);
     }
 

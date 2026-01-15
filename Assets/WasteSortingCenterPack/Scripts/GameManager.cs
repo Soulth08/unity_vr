@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
 
         SystemsActivated(true);
         SetMachineText(txtInGame, false);
-        Debug.Log("🚀 JEU LANCÉ");
+        Debug.Log("JEU LANCÉ");
     }
 
 
@@ -189,7 +189,7 @@ public class GameManager : MonoBehaviour
         // On affiche le texte de GameOver
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
 
-        Debug.Log("💀 GAME OVER");
+        Debug.Log("GAME OVER");
     }
 
 

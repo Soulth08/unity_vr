@@ -34,7 +34,7 @@ public class EmergencyHandleTimed : MonoBehaviour
     // Variables internes
     private Vector3 startPosition;
     private bool estDisponible = true;
-    private Color couleurPlafondBase; // Pour se souvenir de la couleur originale des luimieres au plafond
+    private Color couleurPlafondBase; // Pour se souvenir de la couleur originale des lumières au plafond
 
     private void Awake()
     {
@@ -95,7 +95,7 @@ public class EmergencyHandleTimed : MonoBehaviour
         // les lumières au plafond reviennent à leur couleur de base
         ChangerCouleurPlafond(couleurPlafondBase);
 
-        // la lumière d el apoignée cligote en rouge pendant le cooldown
+        // la lumière de la poignée cligote en rouge pendant le cooldown
         float tempsRestant = dureeCycleTotal - dureeArretUrgence;
         float finCooldown = Time.time + tempsRestant;
 
