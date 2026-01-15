@@ -10,8 +10,12 @@ public class TreadmillsController : MonoBehaviour
 
     [Header("Pause")]
     public bool isPaused { get; private set; }
+
     float currentSpeed, refSpeed;
     const float SPEED_SMOOTH = 0.2f;
+
+    // Nouveau : accumulateur d'offset UV
+    float uvOffset = 0f;
 
     void Start()
     {
@@ -20,30 +24,33 @@ public class TreadmillsController : MonoBehaviour
 
     private void Update()
     {
-        float effectiveTargetSpeed = targetSpeed;
-        if (isPaused)
-            effectiveTargetSpeed = 0;
-
+        float effectiveTargetSpeed = isPaused ? 0 : targetSpeed;
         currentSpeed = Mathf.SmoothDamp(currentSpeed, effectiveTargetSpeed, ref refSpeed, SPEED_SMOOTH);
+
+        // Accumuler l'offset basé sur la vitesse actuelle
+        uvOffset += currentSpeed * maxTreadmillSpeed * MATERIAL_SPEED_MULTIPLIER * Time.deltaTime;
+
         SetSpeed(currentSpeed);
     }
 
     public void SetSpeed(float speed01)
     {
         float speed = speed01 * maxTreadmillSpeed;
+
         foreach (TreadmillForce t in treadmills)
         {
             t.SetSpeed(speed);
         }
 
-        treadmillMat.SetFloat("_Speed", speed * MATERIAL_SPEED_MULTIPLIER);
+        // Passer l'offset accumulé au lieu de la vitesse
+        treadmillMat.SetFloat("_UVOffset", uvOffset);
     }
 
     public void SetPaused(bool value)
     {
         isPaused = value;
     }
-    //FONCTION pour permettre � la poign�e de changer la cible
+
     public void SetTargetSpeed(float speed01)
     {
         targetSpeed = Mathf.Clamp01(speed01);
